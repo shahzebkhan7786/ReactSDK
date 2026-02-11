@@ -1,17 +1,10 @@
-# VideoSDK Dual Room Relay Demo
+# VideoSDK Relay Demo
 
-## Overview
+## Features
 
-This project demonstrates:
-
-1. Two active VideoSDK rooms
-2. Seamless switching
-3. Media relay between rooms
-
-A participant's media is cloned and mirrored into another room,
-simulating relay behavior.
-
----
+- Two rooms: Room A and Room B
+- Normal switching
+- Media relay (audio/video cloning)
 
 ## Setup
 
@@ -20,28 +13,14 @@ npm start
 
 Add VideoSDK token in config.js
 
----
+## Relay Explanation
 
-## Normal Switching
+Tracks are cloned using WebRTC `track.clone()`.
 
-User leaves Room A and joins Room B.
-Connection renegotiates.
-
----
-
-## Media Relay
-
-Media tracks are cloned using WebRTC track cloning.
-
-Participant remains active in Room A
-while relayed media appears in Room B.
-
-This simulates SFU relay behavior.
-
----
+The participant stays active in Room A while the cloned
+stream appears in Room B, simulating relay behavior.
 
 ## Limitations
 
-- True server relay requires backend SFU
-- Browser cloning still introduces minimal delay
-- WebRTC renegotiation unavoidable
+True relay requires server SFU. This demo simulates relay
+at client level.
