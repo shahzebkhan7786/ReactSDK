@@ -4,23 +4,21 @@ import ParticipantView from "./ParticipantView";
 import { ROOM_A, ROOM_B } from "./config";
 
 export default function Room() {
-  const [roomId, setRoomId] = useState(null);
+  const [roomId, setRoomId] = useState("");
 
-  const { join, leave, participants } = useMeeting({
-    meetingId: roomId
-  });
+  const { join, leave, participants } = useMeeting();
 
   const joinRoom = (id) => {
     setRoomId(id);
-    setTimeout(() => join(), 200);
+    join({ meetingId: id });
   };
 
   const switchRoom = (id) => {
     leave();
     setTimeout(() => {
       setRoomId(id);
-      setTimeout(() => join(), 200);
-    }, 300);
+      join({ meetingId: id });
+    }, 500);
   };
 
   return (
