@@ -4,42 +4,45 @@ import { TOKEN, ROOM_A, ROOM_B } from "./config";
 import ParticipantView from "./ParticipantView";
 
 export default function DualRoomManager() {
-  const [mode, setMode] = useState("idle");
+  const [mode, setMode] = useState("A");
 
   return (
-    <>
-      <button onClick={() => setMode("normal")}>Normal Switch</button>
+    <div>
+      <button onClick={() => setMode("A")}>Join Room A</button>
+      <button onClick={() => setMode("B")}>Switch to Room B</button>
       <button onClick={() => setMode("relay")}>Enable Relay</button>
 
-      {/* ROOM A */}
-      <MeetingProvider
-        token={TOKEN}
-        config={{
-          meetingId: ROOM_A,
-          micEnabled: true,
-          webcamEnabled: true,
-          name: "User A"
-        }}
-      >
-        <h2>Room A</h2>
-        <ParticipantView />
-      </MeetingProvider>
+      <hr />
 
-      {/* ROOM B — relay mirror */}
-      {mode === "relay" && (
+      {(mode === "A" || mode === "relay") && (
+        <MeetingProvider
+          token={TOKEN}
+          config={{
+            meetingId: ROOM_A,
+            micEnabled: true,
+            webcamEnabled: true,
+            name: "User"
+          }}
+        >
+          <h2>Room A</h2>
+          <ParticipantView />
+        </MeetingProvider>
+      )}
+
+      {(mode === "B" || mode === "relay") && (
         <MeetingProvider
           token={TOKEN}
           config={{
             meetingId: ROOM_B,
             micEnabled: true,
             webcamEnabled: true,
-            name: "Relayed Stream"
+            name: "Relay User"
           }}
         >
-          <h2>Room B (Relay)</h2>
+          <h2>Room B</h2>
           <ParticipantView />
         </MeetingProvider>
       )}
-    </>
+    </div>
   );
 }
