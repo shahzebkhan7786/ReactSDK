@@ -18,17 +18,30 @@ export default function ParticipantView() {
 }
 
 function Video({ participantId }) {
-  const { webcamStream, webcamOn } = useParticipant(participantId);
-  const ref = useRef();
+  const { webcamStream, micStream, webcamOn, micOn } =
+    useParticipant(participantId);
+
+  const videoRef = useRef();
+  const audioRef = useRef();
 
   useEffect(() => {
-    if (ref.current && webcamOn && webcamStream) {
-      ref.current.srcObject = new MediaStream([
-        webcamStream.track.clone()
-      ]);
-      ref.current.play();
+    if (videoRef.current && webcamOn && webcamStream) {
+      const clonedVideo = webcamStream.track.clone();
+      videoRef.current.srcObject = new MediaStream([clonedVideo]);
+      videoRef.current.play();
     }
-  }, [webcamStream, webcamOn]);
 
-  return <video ref={ref} autoPlay muted width={200} />;
+    if (audioRef.current && micOn && micStream) {
+      const clonedAudio = micStream.track.clone();
+      audioRef.current.srcObject = new MediaStream([clonedAudio]);
+      audioRef.current.play();
+    }
+  }, [webcamStream, micStream, webcamOn, micOn]);
+
+  return (
+    <>
+      <video ref={videoRef} autoPlay muted width={200} />
+      <audio ref={audioRef} autoPlay />
+    </>
+  );
 }
