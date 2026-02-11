@@ -1,23 +1,34 @@
 import React, { useEffect, useRef } from "react";
-import { useParticipant } from "@videosdk.live/react-sdk";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 
-export default function ParticipantView({ participantId }) {
-  const { webcamStream, webcamOn } = useParticipant(participantId);
-  const videoRef = useRef();
+export default function ParticipantView() {
+  const { participants, join } = useMeeting();
 
   useEffect(() => {
-    if (videoRef.current && webcamOn && webcamStream) {
-      videoRef.current.srcObject = new MediaStream([
-        webcamStream.track
+    join();
+  }, []);
+
+  return (
+    <div style={{ display: "flex", gap: 10 }}>
+      {[...participants.keys()].map((id) => (
+        <Video key={id} participantId={id} />
+      ))}
+    </div>
+  );
+}
+
+function Video({ participantId }) {
+  const { webcamStream, webcamOn } = useParticipant(participantId);
+  const ref = useRef();
+
+  useEffect(() => {
+    if (ref.current && webcamOn && webcamStream) {
+      ref.current.srcObject = new MediaStream([
+        webcamStream.track.clone()
       ]);
-      videoRef.current.play();
+      ref.current.play();
     }
   }, [webcamStream, webcamOn]);
 
-  return (
-    <div>
-      <video ref={videoRef} autoPlay muted width={200} />
-      <p>{participantId}</p>
-    </div>
-  );
+  return <video ref={ref} autoPlay muted width={200} />;
 }
